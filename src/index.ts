@@ -11,8 +11,17 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import { Router } from 'itty-router';
+
+const router = Router();
+
+router
+	.get('/', () => new Response("Hello World!"))
+	.get("*", () => new Response("Not found", { status: 404 }));
+
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request, env: Env, ctx): Promise<Response> {
+
+		return router.fetch(request, env);
 	},
 } satisfies ExportedHandler<Env>;
