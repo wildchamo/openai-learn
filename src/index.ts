@@ -12,16 +12,17 @@
  */
 
 import { Router } from 'itty-router';
+import { handleChat } from './handler/chat';
 
 const router = Router();
 
 router
-	.get('/', () => new Response("Hello World!"))
+	.get('/', () => new Response("Hello World!", { status: 200 }))
+	.get('/chat', handleChat)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
 export default {
 	async fetch(request, env: Env, ctx): Promise<Response> {
-
 		return router.fetch(request, env);
 	},
 } satisfies ExportedHandler<Env>;
