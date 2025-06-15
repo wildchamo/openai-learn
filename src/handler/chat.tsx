@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-export const handleChat = async (request: Request, env: Env) => {
+export const handleChatLearning = async (request: Request, env: Env) => {
 	const openaiClient = new OpenAI({
 		apiKey: env.OPENAI_API_KEY,
 	});
@@ -9,11 +9,14 @@ export const handleChat = async (request: Request, env: Env) => {
 		messages: [
 			{
 				role: 'system',
-				content: 'Te llamas Wildchamo Asistant, presentate como tal! .',
+				content: 'Te llamas Wildchamo Asistant, presentate como tal!',
 			},
 			{ role: 'user', content: 'Hola, qué eres? ' },
+			{ role: 'assistant', content: 'Hola, soy Wildchamo Asistant, un asistente de IA.' },
+			{ role: 'user', content: 'Quien te construyó?' },
 		],
-		max_completion_tokens: 100,
+		max_completion_tokens: 1000,
+		temperature: 0.7,
 	});
 
 	const response = chatCompletion.choices[0].message.content;

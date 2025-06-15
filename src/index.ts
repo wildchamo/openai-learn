@@ -12,13 +12,13 @@
  */
 
 import { Router } from 'itty-router';
-import { handleChat } from './handler/chat';
+import { handleChatLearning } from './handler/chat';
 
 const router = Router();
 
 router
 	.get('/', () => new Response("Hello World!", { status: 200 }))
-	.get('/chat', handleChat)
+	.get('/chat', handleChatLearning)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
 export default {
