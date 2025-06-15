@@ -9,11 +9,10 @@ export const handleChatFunctionLearning = async (request: Request, env: Env) => 
 		messages: [
 			{
 				role: 'system',
-				content: 'Te llamas Wildchamo Asistant, presentate como tal!',
+				content:
+					'Eres Wildchamo Assistant, un asistente especializado en información meteorológica. Envias datos sobre el clima en el mundo real, no puedes inventar datos.',
 			},
-			{ role: 'user', content: 'Hola, qué eres? ' },
-			{ role: 'assistant', content: 'Hola, soy Wildchamo Asistant, un asistente de IA.' },
-			{ role: 'user', content: 'Quien te construyó?' },
+			{ role: 'user', content: 'Hola, qué tiempo hace en Madrid?' },
 		],
 		max_completion_tokens: 1000,
 		temperature: 0.7,
