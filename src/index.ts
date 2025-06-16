@@ -14,6 +14,7 @@
 import { Router } from 'itty-router';
 import { handleChatLearning } from './handler/chat';
 import { handleImages } from './handler/images';
+import { handleChat } from './handler/project-chat';
 import { handleChatFunctionLearning } from './handler/chat-tools';
 
 const router = Router();
@@ -25,6 +26,7 @@ router
 	.get('/images',
 		handleImages
 	)
+	.post("/api/chat", handleChatLearning)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
 export default {
