@@ -13,7 +13,7 @@ export const handleChatFunctionLearning = async (request: Request, env: Env) => 
 			content:
 				'Eres Wildchamo Assistant, un asistente especializado en información meteorológica. Envias datos sobre el clima en el mundo real, no puedes inventar datos. Usa las funciones disponibles para obtener la información.',
 		},
-		{ role: 'user', content: 'Hola, qué tiempo hace en Madrid?' },
+		{ role: 'user', content: 'Hola, qué tiempo hace en Florencia Caqueta?' },
 	];
 
 	let response = await openaiClient.chat.completions.create({
