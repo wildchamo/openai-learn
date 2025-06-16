@@ -13,6 +13,7 @@
 
 import { Router } from 'itty-router';
 import { handleChatLearning } from './handler/chat';
+import { handleImages } from './handler/images';
 import { handleChatFunctionLearning } from './handler/chat-tools';
 
 const router = Router();
@@ -21,6 +22,9 @@ router
 	.get('/', () => new Response("Hello World!", { status: 200 }))
 	.get('/chat', handleChatLearning)
 	.get('/chat-function', handleChatFunctionLearning)
+	.get('/images',
+		handleImages
+	)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
 export default {
