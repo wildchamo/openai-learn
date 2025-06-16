@@ -20,7 +20,7 @@ export const handleImages = async (request: Request, env: Env) => {
 					},
 					{
 						type: 'text',
-						text: 'Dime que ves en la imagen',
+						text: 'Dime que ves en la imagen? cuantas letras hay? ',
 					},
 				],
 			},
