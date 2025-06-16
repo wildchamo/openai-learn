@@ -13,7 +13,7 @@
 
 import { Router } from 'itty-router';
 import { handleChatLearning } from './handler/chat';
-import { handleChatFunctionLearning } from './handler/chat-function';
+import { handleChatFunctionLearning } from './handler/chat-tools';
 
 const router = Router();
 
