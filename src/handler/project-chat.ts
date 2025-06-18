@@ -56,8 +56,6 @@ export const handleProjectChat = async (request: Request, env: Env) => {
 	const body = await request.json() as RequestBody;
 	const formattedMessages = prepareMessages(body);
 
-	console.log(formattedMessages);
-
 	try {
 		const openaiClient = new OpenAI({
 			apiKey: env.OPENAI_API_KEY,

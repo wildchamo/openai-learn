@@ -3,6 +3,8 @@ export function corsHeaders(origin?: string) {
 	const allowedOrigins = [
 		'http://localhost:3000',
 		'https://localhost:3000',
+		"http://localhost:64936",
+		"https://chat-client.wildchamo.workers.dev"
 		// Puedes agregar más orígenes aquí
 	];
 
