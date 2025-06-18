@@ -16,21 +16,32 @@ import { handleChatLearning } from './handler/chat';
 import { handleImages } from './handler/images';
 import { handleProjectChat } from './handler/project-chat';
 import { handleChatFunctionLearning } from './handler/chat-tools';
+import { corsMiddleware, corsHeaders } from './cors/middleware';
 
 const router = Router();
 
+
 router
+	.all('*', corsMiddleware) // Aplicar CORS a todas las rutas
 	.get('/', () => new Response("Hello World!", { status: 200 }))
 	.get('/chat', handleChatLearning)
 	.get('/chat-function', handleChatFunctionLearning)
-	.get('/images',
-		handleImages
-	)
+	.get('/images', handleImages)
 	.post("/api/chat", handleProjectChat)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
 export default {
 	async fetch(request, env: Env, ctx): Promise<Response> {
-		return router.fetch(request, env);
+		const response = await router.fetch(request, env);
+
+		// Agregar headers CORS a la respuesta
+		const origin = request.headers.get('Origin');
+		const corsHeadersObj = corsHeaders(origin || undefined);
+
+		Object.entries(corsHeadersObj).forEach(([key, value]) => {
+			response.headers.set(key, value);
+		});
+
+		return response;
 	},
 } satisfies ExportedHandler<Env>;
