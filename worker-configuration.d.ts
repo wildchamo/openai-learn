@@ -4,6 +4,7 @@
 declare namespace Cloudflare {
 	interface Env {
 		OPENAI_API_KEY: string;
+		ai_images_bucket: R2Bucket;
 	}
 }
 interface Env extends Cloudflare.Env { }

@@ -34,6 +34,8 @@ export default {
 	async fetch(request, env: Env, ctx): Promise<Response> {
 		const response = await router.fetch(request, env);
 
+		console.log("env", env);
+
 		// Agregar headers CORS a la respuesta
 		const origin = request.headers.get('Origin');
 		const corsHeadersObj = corsHeaders(origin || undefined);

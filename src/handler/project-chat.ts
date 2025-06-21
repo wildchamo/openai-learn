@@ -4,6 +4,7 @@ interface RequestBody {
 	messages: Array<{
 		role: 'user' | 'assistant' | 'system';
 		content: string;
+		image_data?: string
 	}>;
 }
 
@@ -15,10 +16,42 @@ function prepareMessages(body: RequestBody) {
 		},
 	];
 	for (const message of body.messages) {
-		formattedMessages.push({
-			role: message.role,
-			content: message.content,
-		});
+
+		if (message.image_data) {
+			// procesar imagen
+
+			let content_parts = [{
+				type: "text",
+				text: message.content
+			}]
+
+			// for (const image of message.image_data) {
+
+			// 	//submit image and recieve it
+
+			// 	const imageUrl = await submitAndRecieveImageUrl(image)
+
+			// 	content_parts.push({
+			// 		type: "image_url",
+			// 		image_url: { url: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png' },
+			// 	})
+
+			// }
+
+
+			// formattedMessages.push({
+			// 	role: message.role,
+			// 	content: content_parts
+			// });
+
+
+		} else {
+
+			formattedMessages.push({
+				role: message.role,
+				content: message.content,
+			});
+		}
 	}
 	return formattedMessages;
 }
