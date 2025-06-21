@@ -1,15 +1,20 @@
 import OpenAI from 'openai';
+import { uploadImageToBucket } from '../utils/upload-image';
+
+type ContentPart =
+  | { type: 'text'; text: string }
+  | { type: 'image_url'; image_url: { url: string } };
 
 interface RequestBody {
 	messages: Array<{
 		role: 'user' | 'assistant' | 'system';
 		content: string;
-		image_data?: string
+		image_data?: string[]
 	}>;
 }
 
-function prepareMessages(body: RequestBody) {
-	const formattedMessages = [
+async function prepareMessages(body: RequestBody, ai_images_bucket: R2Bucket) {
+	const formattedMessages: Array<{ role: 'system' | 'user' | 'assistant'; content: string | ContentPart[] }> = [
 		{
 			role: 'system',
 			content: 'Te llamas Tiny, eres un mentor especializado en emprendimiento y coaching. Tienes amplia experiencia ayudando a emprendedores a desarrollar sus ideas de negocio, superar obstáculos, definir estrategias de crecimiento y alcanzar sus metas. Tu enfoque es práctico, motivador y siempre buscas empoderar a las personas para que tomen acción. Compartes conocimientos sobre liderazgo, desarrollo personal, validación de ideas, modelos de negocio, marketing, ventas y mentalidad emprendedora. Eres directo pero empático, y siempre ofreces consejos accionables.',
@@ -20,29 +25,27 @@ function prepareMessages(body: RequestBody) {
 		if (message.image_data) {
 			// procesar imagen
 
-			let content_parts = [{
+			const content_parts: ContentPart[] = [{
 				type: "text",
 				text: message.content
 			}]
 
-			// for (const image of message.image_data) {
+			for (const image of message.image_data) {
 
-			// 	//submit image and recieve it
+				// subir imagen y obtener URL
+				const imageText = await uploadImageToBucket(image, ai_images_bucket);
 
-			// 	const imageUrl = await submitAndRecieveImageUrl(image)
-
-			// 	content_parts.push({
-			// 		type: "image_url",
-			// 		image_url: { url: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png' },
-			// 	})
-
-			// }
+				content_parts.push({
+					type: "image_url",
+					image_url: { url: imageText },
+				})
+			}
 
 
-			// formattedMessages.push({
-			// 	role: message.role,
-			// 	content: content_parts
-			// });
+			formattedMessages.push({
+				role: message.role,
+				content: content_parts
+			});
 
 
 		} else {
@@ -87,11 +90,13 @@ async function streamOpenAIResponse(chatCompletion: AsyncIterable<any>) {
 
 export const handleProjectChat = async (request: Request, env: Env) => {
 	const body = await request.json() as RequestBody;
-	const formattedMessages = prepareMessages(body);
+	const { ai_images_bucket, OPENAI_API_KEY } = env
+	const formattedMessages = await prepareMessages(body, ai_images_bucket);
+
 
 	try {
 		const openaiClient = new OpenAI({
-			apiKey: env.OPENAI_API_KEY,
+			apiKey: OPENAI_API_KEY,
 		});
 
 		const chatCompletion = await openaiClient.chat.completions.create({
