@@ -25,27 +25,18 @@ import { uploadImage } from './handler/upload-image';
 const router = Router();
 
 router
-	.put('/images', uploadImage)
-	.get('/:key+', retrieveImages)
-	.all('*', corsMiddleware) // Aplicar CORS a todas las rutas
+	.all('/api/*', corsMiddleware) // CORS primero para API paths
+	.post('/api/chat', handleProjectChat)
+	.put('/api/images', uploadImage)
 	.get('/chat', handleChatLearning)
 	.get('/chat-function', handleChatFunctionLearning)
 	.get('/images', handleImages)
-	.post("/api/chat", handleProjectChat)
+	.get('/:key+', retrieveImages)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
 export default {
 	async fetch(request, env: Env, ctx): Promise<Response> {
 		const response = await router.fetch(request, env);
-
-		// Agregar headers CORS a la respuesta
-		const origin = request.headers.get('Origin');
-		const corsHeadersObj = corsHeaders(origin || undefined);
-
-		Object.entries(corsHeadersObj).forEach(([key, value]) => {
-			response.headers.set(key, value);
-		});
-
 		return response;
 	},
 } satisfies ExportedHandler<Env>;

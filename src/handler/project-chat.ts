@@ -1,9 +1,8 @@
 import OpenAI from 'openai';
-import { uploadImageToBucket } from '../utils/upload-image';
 
 type ContentPart =
-  | { type: 'text'; text: string }
-  | { type: 'image_url'; image_url: { url: string } };
+	| { type: 'text'; text: string }
+	| { type: 'image_url'; image_url: { url: string } };
 
 interface RequestBody {
 	messages: Array<{
@@ -13,7 +12,7 @@ interface RequestBody {
 	}>;
 }
 
-async function prepareMessages(body: RequestBody, ai_images_bucket: R2Bucket) {
+async function prepareMessages(body: RequestBody) {
 	const formattedMessages: Array<{ role: 'system' | 'user' | 'assistant'; content: string | ContentPart[] }> = [
 		{
 			role: 'system',
@@ -21,41 +20,14 @@ async function prepareMessages(body: RequestBody, ai_images_bucket: R2Bucket) {
 		},
 	];
 	for (const message of body.messages) {
+		formattedMessages.push({
+			role: message.role,
+			content: message.content,
+		});
 
-		if (message.image_data) {
-			// procesar imagen
-
-			const content_parts: ContentPart[] = [{
-				type: "text",
-				text: message.content
-			}]
-
-			for (const image of message.image_data) {
-
-				// subir imagen y obtener URL
-				const imageText = await uploadImageToBucket(image, ai_images_bucket);
-
-				content_parts.push({
-					type: "image_url",
-					image_url: { url: imageText },
-				})
-			}
-
-
-			formattedMessages.push({
-				role: message.role,
-				content: content_parts
-			});
-
-
-		} else {
-
-			formattedMessages.push({
-				role: message.role,
-				content: message.content,
-			});
-		}
 	}
+
+	console.log(formattedMessages);
 	return formattedMessages;
 }
 
@@ -90,8 +62,8 @@ async function streamOpenAIResponse(chatCompletion: AsyncIterable<any>) {
 
 export const handleProjectChat = async (request: Request, env: Env) => {
 	const body = await request.json() as RequestBody;
-	const { ai_images_bucket, OPENAI_API_KEY } = env
-	const formattedMessages = await prepareMessages(body, ai_images_bucket);
+	const { OPENAI_API_KEY } = env
+	const formattedMessages = await prepareMessages(body);
 
 
 	try {
@@ -123,7 +95,7 @@ export const handleProjectChat = async (request: Request, env: Env) => {
 		console.error('Error in handleChatLearning:', error);
 		return new Response(JSON.stringify({ error: 'Internal server error' }), {
 			status: 500,
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
 		});
 	}
 }

@@ -13,7 +13,8 @@
 	"r2_buckets": [
 		  {
 			"bucket_name": "ai-images",
-			"binding": "ai_images_bucket"
+			"binding": "ai_images_bucket",
+			"preview_bucket_name": "ai-images-preview"
 		  }
 		]
 	/**
