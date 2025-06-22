@@ -4,9 +4,8 @@ export async function retrieveImages(request: Request, env: Env) {
 
 	const key = url.pathname.slice(1);
 
-	console.log('key', key);
-
 	const object = await env.ai_images_bucket.get(key);
+
 
 	if (object === null) {
 		return new Response('Object Not Found', {

@@ -18,13 +18,16 @@ import { handleProjectChat } from './handler/project-chat';
 import { handleChatFunctionLearning } from './handler/chat-tools';
 import { corsMiddleware, corsHeaders } from './cors/middleware';
 import { retrieveImages } from './handler/retrieve-image';
+import { uploadImage } from './handler/upload-image';
+
+
 
 const router = Router();
 
-
 router
-	.all('*', corsMiddleware) // Aplicar CORS a todas las rutas
+	.put('/images', uploadImage)
 	.get('/:key+', retrieveImages)
+	.all('*', corsMiddleware) // Aplicar CORS a todas las rutas
 	.get('/chat', handleChatLearning)
 	.get('/chat-function', handleChatFunctionLearning)
 	.get('/images', handleImages)
@@ -33,10 +36,6 @@ router
 
 export default {
 	async fetch(request, env: Env, ctx): Promise<Response> {
-
-		const copyRequest = request.clone();
-
-		console.log(await copyRequest.json())
 		const response = await router.fetch(request, env);
 
 		// Agregar headers CORS a la respuesta
