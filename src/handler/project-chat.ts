@@ -27,7 +27,6 @@ async function prepareMessages(body: RequestBody) {
 
 	}
 
-	console.log(formattedMessages);
 	return formattedMessages;
 }
 

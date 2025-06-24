@@ -16,9 +16,14 @@ import { handleChatLearning } from './handler/chat';
 import { handleImages } from './handler/images';
 import { handleProjectChat } from './handler/project-chat';
 import { handleChatFunctionLearning } from './handler/chat-tools';
-import { corsMiddleware, corsHeaders } from './cors/middleware';
+import {
+	corsMiddleware
+} from './cors/middleware';
 import { retrieveImages } from './handler/retrieve-image';
 import { uploadImage } from './handler/upload-image';
+import { imageGen } from './handler/image-gen';
+
+
 
 
 
@@ -31,6 +36,7 @@ router
 	.get('/chat', handleChatLearning)
 	.get('/chat-function', handleChatFunctionLearning)
 	.get('/images', handleImages)
+	.get('/image-gen', imageGen)
 	.get('/:key+', retrieveImages)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
