@@ -25,7 +25,6 @@ export const handleAsistantsCall = async (request: Request, env: Env) => {
 		thread.id,
 		{
 			assistant_id: assistantId,
-			instructions: "Please address the user as Jane Doe. The user has a premium account.",
 		}
 	)
 
@@ -33,12 +32,17 @@ export const handleAsistantsCall = async (request: Request, env: Env) => {
 		const messages = await openaiClient.beta.threads.messages.list(
 			run.thread_id
 		);
-
 		for (const message of messages.data.reverse()) {
+
 			console.log(message.content)
 			console.log(`${message.role} > ${message.content}`);
 		}
+
+		return new Response(JSON.stringify(messages), { status: 200 });
+
 	} else {
 		console.log(run.status);
+
 	}
+
 }

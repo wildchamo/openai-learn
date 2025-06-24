@@ -22,8 +22,7 @@ import {
 import { retrieveImages } from './handler/retrieve-image';
 import { uploadImage } from './handler/upload-image';
 import { imageGen } from './handler/image-gen';
-
-
+import { handleAsistantsCall } from './handler/asistants';
 
 
 
@@ -37,6 +36,7 @@ router
 	.get('/chat-function', handleChatFunctionLearning)
 	.get('/images', handleImages)
 	.get('/image-gen', imageGen)
+	.get('/assistants', handleAsistantsCall)
 	.get('/:key+', retrieveImages)
 	.get("*", () => new Response("Not found", { status: 404 }));
 
